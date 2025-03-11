@@ -1,0 +1,99 @@
+<?php
+include "base.php";
+include "message.php";
+include "../controller/pdo.php";
+
+//$sql = "SELECT id_user, firstname_user, lastname_user, mail_user, role_user, subject_user, image_user FROM user";
+
+$id = $_SESSION['user_id'];
+$sql = "SELECT user_lastname, user_firstname, user_mail FROM users WHERE user_id = '$id'";
+$stmt = $pdo->query($sql);
+$users = $stmt->fetch(PDO::FETCH_ASSOC);
+
+?>
+
+<h1 class="text-center">Votre Profil</h1>
+
+<div class="container-fluid border border-2 col-10 mt-5 rounded-2">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">Mes informations</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">Premium</button>
+        </li>
+    </ul>
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+            <div class="card mx-auto" style="width: 18rem;">
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>
+                            Nom : <span><?= htmlentities($users['user_lastname']) ?> </span>
+                        </li>
+                        <li>
+                            Prenom : <?= htmlentities($users['user_firstname']) ?>
+                        </li>
+                        <li>
+                            Mail : <?= htmlentities($users['user_mail']) ?>
+                        </li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Modifier</a>
+                    <a href="controller/delete_user_controller.php?id=<?= $user['id_user'] ?>" class="btn btn-danger delete_btn" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer</a>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            <p>Contenu de l'onglet 2.</p>
+        </div>
+        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+            <p>Contenu de l'onglet 3.</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 text-center">
+
+
+
+
+    </div>
+
+</div>
+</div>
+
+<div class="modal" id="validation_delete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Supression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Voulez vous supprimez cette personne.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                <a id="delete" href="" class="btn btn-danger">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const btnDelete = document.getElementById('delete')
+    const deleteLinks = document.querySelectorAll(".delete_btn")
+
+    for (deleteLink of deleteLinks) {
+        deleteLink.addEventListener('click', function() {
+
+            let href = this.href;
+            btnDelete.href = href;
+
+        });
+    }
+</script>
+
+</body>
+
+</html>

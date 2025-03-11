@@ -1,0 +1,13 @@
+@font-face {
+    font-family: exo2;
+    src: url(../font/Exo2-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: exo2, Arial, Helvetica, sans-serif;
+}
+
+.lecteur {
+    margin: auto;
+    border-radius: 15px;
+}
