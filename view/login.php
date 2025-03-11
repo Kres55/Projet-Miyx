@@ -10,7 +10,7 @@ include "../controller/pdo.php";
     <h1 class="text-center mt-5">Miyx</h1>
 
     <div class="text-center align-items-center d-flex">
-        <form class="w-50 mx-auto bg-secondary border rounded" action="../controller/login_controller.php" method="POST">
+        <form class="w-50 mx-auto bg-secondary border rounded" action="controller/login_controller.php" method="POST">
 
             <label class="form-label my-4 text-white" for="user_mail">Email de connexion</label>
 

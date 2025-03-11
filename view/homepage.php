@@ -31,7 +31,6 @@ include "message.php";
             </div>
         </div>
 
-    <script src="script.js"></script>
 </body>
 
 </html>
@@ -48,14 +47,12 @@ include "message.php";
             <li class="nav-item"><a href="artists.php" class="nav-link px-2 text-body-secondary">Artistes</a></li>
             <li class="nav-item"><a href="genres.php" class="nav-link px-2 text-body-secondary">Genres</a></li>
             <li class="nav-item"><a href="legal_notices.php" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary"></a></li>
+           
         </ul>
         <p class="text-center text-body-secondary">&copy; 2025 Miyx</p>
     </footer>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </body>
 
