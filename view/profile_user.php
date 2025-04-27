@@ -25,31 +25,33 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
     </ul>
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-            <div class="card mx-auto" style="width: 18rem;">
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li>
-                            Nom : <span><?= htmlentities($users['user_lastname']) ?> </span>
-                        </li>
-                        <li>
-                            Prenom : <?= htmlentities($users['user_firstname']) ?>
-                        </li>
-                        <li>
-                            Mail : <?= htmlentities($users['user_mail']) ?>
-                        </li>
-                    </ul>
-                    <a href="#" class="btn btn-primary">Modifier</a>
-                    <a href="controller/delete_user_controller.php?id=<?= $user['id_user'] ?>" class="btn btn-danger delete_btn" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer</a>
-                </div>
+            <ul class="list-unstyled">
+                <li>
+                    Nom : <span><?= htmlentities($users['user_lastname']) ?> </span>
+                </li>
+                <li>
+                    Prenom : <?= htmlentities($users['user_firstname']) ?>
+                </li>
+                <li>
+                    Mail : <?= htmlentities($users['user_mail']) ?>
+                </li>
+            </ul>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+            <div class="text-center">
+                <a href="view/modify_user.php" class="btn btn-primary mt-5 me-5">Modifier</a>
+                <a href="controller/delete_user_controller.php?id=<?= $id ?>" class="btn btn-danger delete_btn mt-5" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer votre compte</a>
             </div>
         </div>
-        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-            <p>Contenu de l'onglet 2.</p>
-        </div>
-        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-            <p>Contenu de l'onglet 3.</p>
-        </div>
     </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+        <p>Contenu de l'onglet 2.</p>
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+        <p>Contenu de l'onglet 3.</p>
+    </div>
+</div>
 </div>
 <div class="row">
     <div class="col-lg-12 text-center">
@@ -70,7 +72,7 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Voulez vous supprimez cette personne.</p>
+                <p>Voulez vous vraiment supprimer votre compte ?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>

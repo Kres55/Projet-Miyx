@@ -13,6 +13,7 @@ if (
     // md5, sha1, sha2, sha256, sha512
     // Argon2 => Argon2I et l'Argon2d
 
+
     $psw = password_hash($_POST["user_password"], PASSWORD_ARGON2I);
 
     $sql = "INSERT INTO users (user_firstname, user_lastname, user_mail, user_password) VALUES (?,?,?,?)";
@@ -30,6 +31,6 @@ if (
         header("Location: ../view/sign_up.php?message=Erreur serveur, appelez le developpeur.&status=error");
     }
 } else {
-// Ici le formulaire est mal remplis
+// Ici le formulaire est mal rempli
 header("Location: ../view/sign_up.php?message=Veuillez remplir le formulaire correctement&status=error");
 }

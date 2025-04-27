@@ -9,9 +9,9 @@ if (!isset($_SESSION['name'])) {
 }
 
 if (
-    !empty($_POST["firstname_user"]) &&
-    !empty($_POST["lastname_user"]) &&
-    !empty($_POST["mail_user"])
+    !empty($_POST["user_firstname"]) &&
+    !empty($_POST["user_lastname"]) &&
+    !empty($_POST["user_mail"])
 ) {
 
     $sql = "UPDATE users SET user_firstname = ?, user_lastname = ?, user_mail = ? WHERE user_id =? ";

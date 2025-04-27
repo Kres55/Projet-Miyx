@@ -18,19 +18,19 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <h1 class="text-center text-primary">Modifier mon profil</h1>
 
-<form class="w-50 mx-auto" action="../controller/modify_user_controller.php" method="POST">
+<form class="w-50 mx-auto" action="controller/modify_user_controller.php" method="POST">
 
 
-    <label class="form-label" for="firstname_user">Prénom</label>
-    <input class="form-control" type="text" name="firstname_user" value="<?= htmlentities($user['user_firstname']) ?>" placeholder="Prénom de l'employé">
+    <label class="form-label" for="user_firstname">Prénom</label>
+    <input class="form-control" type="text" name="user_firstname" value="<?= htmlentities($user['user_firstname']) ?>" placeholder="Votre nom">
 
 
-    <label class="form-label" for="lastname_user">Nom</label>
-    <input class="form-control" type="text" name="lastname_user" value="<?= htmlentities($user['user_lastname']) ?>" placeholder="Nom de l'employé">
+    <label class="form-label" for="user_lastname">Nom</label>
+    <input class="form-control" type="text" name="user_lastname" value="<?= htmlentities($user['user_lastname']) ?>" placeholder="Votre prénom">
 
 
-    <label class="form-label" for="mail_user">Courriel</label>
-    <input class="form-control" type="text" name="mail_user" value="<?= htmlentities($user['user_mail']) ?>" placeholder="Email de l'employé">
+    <label class="form-label" for="user_mail">Courriel</label>
+    <input class="form-control" type="text" name="user_mail" value="<?= htmlentities($user['user_mail']) ?>" placeholder="Votre email">
 
     <div class="text-center my-3">
         <a class="btn btn-warning" href="view/psw_update_form.php">Modifier le mot de passe</a>

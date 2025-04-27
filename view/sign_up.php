@@ -2,14 +2,14 @@
 include "base.php";
 include 'message.php';
 ?>
-<h1 class="text-center text-primary">Inscription</h1>
+<h1 class="text-center text-primary mt-5">Inscription</h1>
 
 <!-- La propriété action d'un formulaire
      permet de faire pointer les données de validation du formulaire vers un autre fichier où ils seront traitées. -->
 
 <!-- POST est une méthode HTTP(Hypertext transfert protocol) qui envoie les données au serveur, contraire à la methode GET qui envoie les données dans l'URL -->
 
-    <form class="w-50 mx-auto border border-3 border-primary rounded-2 shadow-lg p-3 mb-5 mt-5" action="../controller/add_user_controller.php" method="POST" enctype="multipart/form-data">
+    <form class="w-50 mx-auto border border-3 border-primary rounded-2 shadow-lg p-3 mb-5 mt-5" action="controller/add_user_controller.php" method="POST" enctype="multipart/form-data">
 
 
         <label class="form-label" for="user_firstname">Prénom</label>
@@ -28,7 +28,19 @@ include 'message.php';
             <input type="submit" value="S'inscrire" class="btn btn-primary my-3">
         </div>
 
+        <div class="text-center">
+            <p>En vous inscrivant, vous acceptez nos <a href="condition_utilisation.php">Conditions d'utilisation</a> et notre <a href="politique_de_confidentialité.php">Politique de confidentialité</a>.</p>
+        </div>
+
     </form>
+
+    
+    <div class="text-center">
+        <p>Déjà inscrit ? <a href="view/login.php">Connectez-vous ici</a></p>
+    </div>
+    
+
+
 
 
 

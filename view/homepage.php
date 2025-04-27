@@ -4,139 +4,278 @@ include "base.php";
 include "../controller/pdo.php";
 include "message.php";
 
+$sql = "SELECT * FROM music LEFT JOIN genre ON genre.genre_id = music.music_genre_id";
+$stmt = $pdo->query($sql);
+$musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+<main class="d-flex">
+    <section class="mt-5 text-center h-50">
+        <h2>Playlist</h2>
+        <div>
+            <ul class="list-group mb-2" id="playlistList">
+                <!-- Les playlists seront affichées ici -->
+            </ul>
 
+            <!-- Bouton + pour ajouter une nouvelle playlist -->
+            <button id="addPlaylistBtn" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-plus"></i> <!-- Icône Bootstrap -->
+            </button>
 
-        <div class="card bg-dark text-white p-3 container lecteur">
-            <audio id="audio" class="d-none"></audio>
-
-            <!-- Barre de progression -->
-            <input type="range" id="progress" class="form-range w-100 mb-2" value="0">
-            <div class="d-flex justify-content-between">
-                <span id="currentTime">0:00</span>
-                <span id="duration">0:00</span>
+            <!-- Champ input caché au début -->
+            <div id="playlistInputContainer" class="mt-2" style="display: none;">
+                <input type="text" id="newPlaylistName" class="form-control" placeholder="Nom de la playlist">
+                <button class="btn btn-sm btn-success mt-1" id="savePlaylistBtn">Créer</button>
             </div>
 
-            <!-- Boutons -->
-            <div class="d-flex justify-content-center mb-3">
-                <button id="prev" class="btn btn-light mx-2"><i class="bi bi-skip-backward-fill"></i></button>
-                <button id="playPause" class="btn btn-primary mx-2"><i class="bi bi-play-fill"></i></button>
-                <button id="next" class="btn btn-light mx-2"><i class="bi bi-skip-forward-fill"></i></button>
-            </div>
-
-            <!-- Contrôle du volume -->
-            <div class="d-flex align-items-center mt-3">
-                <button id="mute" class="btn btn-light"><i class="bi bi-volume-up-fill"></i></button>
-                <input type="range" id="volume" class="form-range mx-2" min="0" max="1" step="0.1" value="1">
-            </div>
         </div>
 
-</body>
+    </section>
+    <div class="container">
+        <div class="d-flex justify-content-center mt-5">
+            <input class="form-control me-2 mt-2 text-center recherche w-50"
+                id="search"
+                type="search"
+                placeholder="Titre, artiste, genre..."
+                aria-label="Search">
+            <ul class="list-group d-flex flex-column position-absolute text-center w-100 opacity-75 mt-2"
+                id="results">
+            </ul>
+        </div>
 
-</html>
+        <div>
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="titre-tab" data-bs-toggle="tab" data-bs-target="#titre" type="button" role="tab" aria-controls="titre" aria-selected="true">Titre</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="genre-tab" data-bs-toggle="tab" data-bs-target="#genre" type="button" role="tab" aria-controls="genre" aria-selected="false">Genre</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="artiste-tab" data-bs-toggle="tab" data-bs-target="#artiste" type="button" role="tab" aria-controls="artiste" aria-selected="false">Artiste</button>
+                </li>
+            </ul>
+
+            <?php
+            ob_start();
+            foreach ($musicInfos as $musicInfo) {
+
+            ?>
+                <div class="tab-content mt-3" id="myTabContent">
+                    <div class="tab-pane fade show active" id="titre" role="tabpanel" aria-labelledby="titre-tab">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?>" class="text-decoration-none text-primary"><?= $musicInfo['music_track'] ?></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="genre" role="tabpanel" aria-labelledby="genre-tab">
+                        <!-- Onglets internes -->
+                        <ul class="nav nav-tabs mt-3" id="innerTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
+                                    <?= $musicInfo['genre_music'] ?>
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Contenu des sous-onglets -->
+                        <div class="tab-content mt-2" id="innerTabContent">
+                            <div class="tab-pane fade show active" id="sub-genre" role="tabpanel" aria-labelledby="sub-genre-tab">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?? '' ?>" class="text-decoration-none text-primary">
+                                            <?= $musicInfo['genre_music'] ?? '' ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="artiste" role="tabpanel" aria-labelledby="artiste-tab">
+                        <p>Contenu de l'onglet Artiste.</p>
+                    </div>
+                </div>
+
+            <?php } ?>
+        </div>
+
+    </div>
+</main>
+
+<div class="container h-100">
+    <div class="row justify-content-center gap-5 border-top mb-4 align-items-stretch  h-100">
 
 
 
+        <div class="col-md-12">
+            <form id="infoMusic" class="w-100 mx-auto border border-3 border-primary rounded-2 shadow-lg p-3 mb-2 mt-5" method="GET">
 
 
+                <label class="form-label" for="music_track">titre :</label>
+                <input class="form-control" type="text" name="music_track" id=music_track readonly>
 
-<div class="container">
-    <footer class="py-3 my-4">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="homepage.php" class="nav-link px-2 text-body-secondary">Accueil</a></li>
-            <li class="nav-item"><a href="artists.php" class="nav-link px-2 text-body-secondary">Artistes</a></li>
-            <li class="nav-item"><a href="genres.php" class="nav-link px-2 text-body-secondary">Genres</a></li>
-            <li class="nav-item"><a href="legal_notices.php" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
-           
-        </ul>
-        <p class="text-center text-body-secondary">&copy; 2025 Miyx</p>
-    </footer>
+                <label class="form-label mt-4" for="music_source">Source :</label>
+                <input class="form-control" type="text" name="music_source" id="music_source" readonly>
+
+                <label class="form-label mt-4" for="music_license">License :</label>
+                <input class="form-control" type="text" name="music_license" id="music_license" readonly>
+
+            </form>
+        </div>
+        <div class="col-md-12">
+            <div class="card bg-dark text-white p-3 lecteur">
+                <audio id="audio" class=""></audio>
+
+                <input type="range" id="progress" class="form-range w-100 mb-2 me-5" min="0" max="100" step="0.1" value="0">
+                <div class="d-flex justify-content-between">
+                    <span id="currentTime"></span>
+                    <span id="duration"></span>
+                </div>
+
+
+                <div class="mx-auto mb-3 w-100">
+                    <button id="mute" class="btn btn-light"><i class="bi bi-volume-up-fill"></i></button>
+                    <input type="range" id="volume" class="form-range mx-3  w-25" min="0" max="1" step="0.1" value="0.2">
+                    <button id="prev" class="btn btn-light mx-2 ms-5"><i class="bi bi-skip-backward-fill"></i></button>
+                    <button id="playPause" class="btn btn-primary mx-2"><i class="bi bi-play-fill"></i></button>
+                    <button id="next" class="btn btn-light mx-2"><i class="bi bi-skip-forward-fill"></i></button>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <footer class="">
+                <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                    <li class="nav-item"><a href="legal_notices.php" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
+                </ul>
+                <p class="text-center text-body-secondary">&copy; 2025 Miyx</p>
+            </footer>
+        </div>
+    </div>
+
+
 </div>
 
-
 </body>
+
 
 </html>
 
 <script>
-    const audio = new Audio();
-    const playlist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    let currentTrack = 0;
-    audio.src = playlist[currentTrack];
-
+    const audio = document.getElementById("audio");
     const playPauseBtn = document.getElementById("playPause");
+    const muteBtn = document.getElementById("mute");
+    const volumeSlider = document.getElementById("volume");
     const progressBar = document.getElementById("progress");
     const currentTimeDisplay = document.getElementById("currentTime");
     const durationDisplay = document.getElementById("duration");
-    const volumeControl = document.getElementById("volume");
-    const muteBtn = document.getElementById("mute");
-    const nextBtn = document.getElementById("next");
-    const prevBtn = document.getElementById("prev");
 
-    // // Chargement de la durée totale
-    // audio.addEventListener("loadedmetadata", () => {
-    //     durationDisplay.textContent = formatTime(audio.duration);
-    // });
+    const titleInput = document.getElementById("music_track");
+    const licenseInput = document.getElementById("music_license");
+    const sourceInput = document.getElementById("music_source");
 
-    // // Lecture/Pause
-    // playPauseBtn.addEventListener("click", () => {
-    //     if (audio.paused) {
-    //         audio.play();
-    //         playPauseBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
-    //     } else {
-    //         audio.pause();
-    //         playPauseBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
-    //     }
-    // });
+    let isPlaying = false;
 
-    // // Mise à jour de la barre de progression
-    // audio.addEventListener("timeupdate", () => {
-    //     progressBar.value = (audio.currentTime / audio.duration) * 100;
-    //     currentTimeDisplay.textContent = formatTime(audio.currentTime);
-    // });
+    let parsedUrl = new URL(window.location.href);
+    // console.log(parsedUrl.searchParams.get("id"));
+    let id = parsedUrl.searchParams.get("id");
 
-    // // Changer la position de lecture
-    // progressBar.addEventListener("input", () => {
-    //     audio.currentTime = (progressBar.value / 100) * audio.duration;
-    // });
 
-    // // Boutons Suivant / Précédent
-    // nextBtn.addEventListener("click", () => {
-    //     currentTrack = (currentTrack + 1) % playlist.length;
-    //     changeTrack();
-    // });
+    // Affiche le champ
+    document.getElementById('addPlaylistBtn').addEventListener('click', function() {
+        document.getElementById('playlistInputContainer').style.display = 'block';
+        document.getElementById('newPlaylistName').focus();
+    });
 
-    // prevBtn.addEventListener("click", () => {
-    //     currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-    //     changeTrack();
-    // });
+    // Crée la playlist quand on clique sur "Créer"
+    document.getElementById('savePlaylistBtn').addEventListener('click', function() {
+        const name = document.getElementById('newPlaylistName').value.trim();
 
-    // function changeTrack() {
-    //     audio.src = playlist[currentTrack];
-    //     audio.play();
-    //     playPauseBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
-    // }
+        if (name === '') return;
 
-    // // Contrôle du volume
-    // volumeControl.addEventListener("input", () => {
-    //     audio.volume = volumeControl.value;
-    // });
+        fetch('create_playlist.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'name=' + encodeURIComponent(name)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Ajoute la playlist dans la liste
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = name;
+                    document.getElementById('playlistList').appendChild(li);
 
-    // // Bouton Mute
-    // muteBtn.addEventListener("click", () => {
-    //     if (audio.muted) {
-    //         audio.muted = false;
-    //         muteBtn.innerHTML = '<i class="bi bi-volume-up-fill"></i>';
-    //     } else {
-    //         audio.muted = true;
-    //         muteBtn.innerHTML = '<i class="bi bi-volume-mute-fill"></i>';
-    //     }
-    // });
+                    // Réinitialise
+                    document.getElementById('newPlaylistName').value = '';
+                    document.getElementById('playlistInputContainer').style.display = 'none';
+                } else {
+                    alert('Erreur: ' + data.message);
+                }
+            })
+            .catch(err => console.error('Erreur AJAX:', err));
+    });
 
-    // // Fonction pour formater le temps (ex: 2:03)
-    // function formatTime(seconds) {
-    //     let min = Math.floor(seconds / 60);
-    //     let sec = Math.floor(seconds % 60);
-    //     return `${min}:${sec.toString().padStart(2, "0")}`;
-    // }
+    fetch("controller/view_music_controller.php?id=" + id)
+        .then(res => res.json())
+        .then(track => {
+            //console.log(track);
+
+            audio.src = track.music_path;
+            titleInput.value = typeof(track.music_track) !== "undefined" ? track.music_track : "";
+            licenseInput.value = typeof(track.music_licence) !== "undefined" ? track.music_licence : "";
+            sourceInput.value = typeof(track.music_source) !== "undefined" ? track.music_source : "";
+        });
+
+
+    playPauseBtn.addEventListener("click", () => {
+        if (isPlaying) {
+            audio.pause();
+        } else {
+            audio.play();
+        }
+    });
+
+    audio.addEventListener("play", () => {
+        isPlaying = true;
+        playPauseBtn.innerHTML = `<i class="bi bi-pause-fill"></i>`;
+    });
+
+    audio.addEventListener("pause", () => {
+        isPlaying = false;
+        playPauseBtn.innerHTML = `<i class="bi bi-play-fill"></i>`;
+    });
+
+    audio.addEventListener("timeupdate", () => {
+        progressBar.value = (audio.currentTime / audio.duration) * 100 || 0;
+        currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        durationDisplay.textContent = formatTime(audio.duration);
+    });
+
+    progressBar.addEventListener("input", () => {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+    });
+
+    volumeSlider.addEventListener("input", () => {
+        audio.volume = volumeSlider.value;
+    });
+
+    muteBtn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        muteBtn.innerHTML = audio.muted ? `<i class="bi bi-volume-mute-fill"></i>` : `<i class="bi bi-volume-up-fill"></i>`;
+    });
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+        return `${mins}:${secs}`;
+    }
+
+    // console.log(audio.duration);
 </script>

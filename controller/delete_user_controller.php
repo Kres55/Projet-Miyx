@@ -4,7 +4,7 @@ include "pdo.php";
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $sql = "DELETE FROM users WHERE id_user=?";
+    $sql = "DELETE FROM users WHERE user_id=?";
     $stmt = $pdo->prepare($sql);
     if ($stmt->execute([$id])) {
         header("Location: ../homepage.php?message=Exécution réussie&status=success");

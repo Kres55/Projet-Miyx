@@ -30,13 +30,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle='dropdown' aria-expanded="false">
-              Recherchez par...
-            </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item text-center" href="#">Artiste</a></li>
-              <li><a class="dropdown-item text-center" href="#">Genre</a></li>
-              <li><a class="dropdown-item text-center" href="#">Titre</a></li>
             </ul>
           </li>
           <?php if (!isset($_SESSION['name'])) { ?>
@@ -64,6 +58,9 @@
             </svg>
             <?= $_SESSION['name'] ?>
           </a>
+          <li class="nav-item">
+            <a href="view/upload_music.php">Vous êtes artiste ? Uploadez votre musique ici</a>
+          </li>
         </ul>
       <?php } ?>
 

@@ -8,6 +8,43 @@
 }
 
 .lecteur {
-    margin: auto;
     border-radius: 15px;
+}
+
+body{
+    height: 100vh;
+}
+
+.recherche {
+    font-size: 1.2em !important;
+    transition: all 0.3s ease;
+}
+
+.recherche:focus {
+    color: var(--secondary) !important;
+    box-shadow: 0 0 5px #ff5733 !important;
+    /* Effet lumineux autour */
+    border-color: var(--secondary) !important;
+    transition: all 0.3s ease;
+}
+
+.search-list:hover {
+    background-color: var(--secondary);
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+::placeholder {
+    color: var(--secondary) !important;
+    opacity: 0.7 !important;
+}
+
+@keyframes fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
