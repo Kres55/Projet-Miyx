@@ -4,9 +4,17 @@ include "base.php";
 include "../controller/pdo.php";
 include "message.php";
 
-$sql = "SELECT * FROM music LEFT JOIN genre ON genre.genre_id = music.music_genre_id";
-$stmt = $pdo->query($sql);
-$musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM music left join music_genre on music.music_id = music_genre.music_id left join genre on music_genre.genre_id = genre.genre_id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+// Vérification de l'exécution de la requête
+if ($stmt === false) {
+    echo "Erreur lors de l'exécution de la requête.";
+} else {
+    $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 
 ?>
 <main class="d-flex">
@@ -32,18 +40,18 @@ $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     </section>
     <div class="container">
-        <div class="d-flex justify-content-center mt-5">
+        <div class="d-flex justify-content-center mt-5 mb-2">
             <input class="form-control me-2 mt-2 text-center recherche w-50"
                 id="search"
                 type="search"
-                placeholder="Titre, artiste, genre..."
+                placeholder="Titre, artiste.."
                 aria-label="Search">
-            <ul class="list-group d-flex flex-column position-absolute text-center w-100 opacity-75 mt-2"
+            <ul class="list-group d-flex flex-column mt-2 text-center w-100 opacity-75 "
                 id="results">
             </ul>
         </div>
 
-        <div>
+        <div class="h-100">
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -57,48 +65,50 @@ $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </li>
             </ul>
 
-            <?php
-            ob_start();
-            foreach ($musicInfos as $musicInfo) {
 
-            ?>
-                <div class="tab-content mt-3" id="myTabContent">
-                    <div class="tab-pane fade show active" id="titre" role="tabpanel" aria-labelledby="titre-tab">
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="titre" role="tabpanel" aria-labelledby="titre-tab">
+                    <?php
+
+                    foreach ($musicInfos as $musicInfo) {
+
+                    ?>
                         <ul class="list-unstyled">
                             <li>
                                 <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?>" class="text-decoration-none text-primary"><?= $musicInfo['music_track'] ?></a>
                             </li>
                         </ul>
-                    </div>
-                    <div class="tab-pane fade" id="genre" role="tabpanel" aria-labelledby="genre-tab">
-                        <!-- Onglets internes -->
-                        <ul class="nav nav-tabs mt-3" id="innerTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
-                                    <?= $musicInfo['genre_music'] ?>
-                                </button>
-                            </li>
-                        </ul>
+                    <?php } ?>
+                </div>
+                <div class="tab-pane fade" id="genre" role="tabpanel" aria-labelledby="genre-tab">
+                    <!-- Onglets internes -->
+                    <ul class="nav nav-tabs mt-3" id="innerTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
+                                <?= $musicInfo['genre_name'] ?>
+                            </button>
+                        </li>
+                    </ul>
 
-                        <!-- Contenu des sous-onglets -->
-                        <div class="tab-content mt-2" id="innerTabContent">
-                            <div class="tab-pane fade show active" id="sub-genre" role="tabpanel" aria-labelledby="sub-genre-tab">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?? '' ?>" class="text-decoration-none text-primary">
-                                            <?= $musicInfo['genre_music'] ?? '' ?>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                    <!-- Contenu des sous-onglets -->
+                    <div class="tab-content mt-2" id="innerTabContent">
+                        <div class="tab-pane fade show active" id="sub-genre" role="tabpanel" aria-labelledby="sub-genre-tab">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?? '' ?>" class="text-decoration-none text-primary">
+                                        <?= $musicInfo['genre_music'] ?? '' ?>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="artiste" role="tabpanel" aria-labelledby="artiste-tab">
-                        <p>Contenu de l'onglet Artiste.</p>
-                    </div>
                 </div>
+                <div class="tab-pane fade" id="artiste" role="tabpanel" aria-labelledby="artiste-tab">
+                    <p>Contenu de l'onglet Artiste.</p>
+                </div>
+            </div>
 
-            <?php } ?>
+
         </div>
 
     </div>
@@ -196,7 +206,7 @@ $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (name === '') return;
 
-        fetch('create_playlist.php', {
+        fetch('controller/add_playlist_controller.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -278,4 +288,26 @@ $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // console.log(audio.duration);
+    search.addEventListener("input", function() {
+        let v = this.value;
+        fetch(
+                `controller/search.php?search=${v}`
+            )
+            .then((response) => response.json())
+            .then((musics) => {
+                let res = musics.results;
+                results.innerHTML = "";
+                res.forEach((el) => {
+                    let li = document.createElement("li");
+                    li.classList.add("list-group-item", "search-list");
+                    li.innerHTML = el.title;
+                    li.addEventListener("click", function() {
+                        console.log(el.id);
+                        window.location.href = `view/homepage.php?music_id=${el.id}`;
+                    });
+                    results.appendChild(li);
+                });
+            })
+            .catch((err) => console.error(err));
+    });
 </script>

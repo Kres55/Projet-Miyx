@@ -1,5 +1,4 @@
 <?php
-
 include "pdo.php";
 
 
@@ -17,6 +16,7 @@ include "pdo.php";
                 $_SESSION['name'] = $user['user_lastname'];
                 $_SESSION['token'] = bin2hex(random_bytes(16));
                 $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['user_isartist'] = $user['user_isartist'];
 
                 header("Location: ../view/homepage.php"); 
             }else{

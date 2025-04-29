@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+  <script defer src="JS/search.js"></script>
   <!-- <script defer src="script.js"></script> -->
   <link rel="stylesheet" href="css/style.css">
   <title>Miyx - Ecoutez de la musique indépendante gratuitement</title>
@@ -58,16 +59,16 @@
             </svg>
             <?= $_SESSION['name'] ?>
           </a>
-          <li class="nav-item">
-            <a href="view/upload_music.php">Vous êtes artiste ? Uploadez votre musique ici</a>
-          </li>
+        <?php } ?>
+        <?php
+        if (isset($_SESSION['user_isartist'])) {
+          if ($_SESSION['user_isartist']) { ?>
+            <li class="nav-item">
+              <a href="view/upload_music.php">Uploadez votre musique ici</a>
+            </li>
+        <?php }
+        } ?>
         </ul>
-      <?php } ?>
-
-      <!-- Barre de recherche pour version bureau -->
-      <form class="d-none d-lg-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="titre, artiste, genre..." aria-label="Search">
-      </form>
       </div>
 
     </div>

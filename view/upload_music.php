@@ -20,12 +20,12 @@ include "message.php";
                 $stmt = $pdo->query($sql);
                 $genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($genres as $genre) {
-                    echo "<option value='{$genre['genre_id']}'>{$genre['genre_music']}</option>";
+                    echo "<option value='{$genre['genre_id']}'>{$genre['genre_name']}</option>";
                 }
                 ?>
             </select>
 
-            <label for="artist_name" class="form-label">Auteur</label>
+            <label for="artist_name" class="form-label">Artiste</label>
             <input type="text" class="form-control" id="artist_name" name="artist_name" required>
         </div>
 

@@ -1,12 +1,13 @@
 <?php
-
+session_start();
 include "pdo.php";
 
 if (
     !empty($_POST['user_firstname']) &&
     !empty($_POST['user_lastname']) &&
     !empty($_POST['user_mail']) &&
-    !empty($_POST['user_password'])
+    !empty($_POST['user_password']) &&
+    isset($_POST['artist'])
 ) {
 
     // Exemple d'algo de hashage
@@ -16,7 +17,9 @@ if (
 
     $psw = password_hash($_POST["user_password"], PASSWORD_ARGON2I);
 
-    $sql = "INSERT INTO users (user_firstname, user_lastname, user_mail, user_password) VALUES (?,?,?,?)";
+    $is_artist = $_POST['artist'] === 'yes' ? 1 : 0;
+
+    $sql = "INSERT INTO users (user_firstname, user_lastname, user_mail, user_password, user_isartist) VALUES (?,?,?,?,?)";
 
     $stmt = $pdo->prepare($sql);
     $verif = $stmt->execute([
@@ -24,8 +27,10 @@ if (
         $_POST["user_lastname"],
         $_POST["user_mail"],
         $psw,
+        $is_artist
     ]);
     if ($verif) {
+        $_SESSION['user_isartist'] = $is_artist;
         header("Location: ../view/homepage.php?message=Inscription réussie&status=success");
     } else {
         header("Location: ../view/sign_up.php?message=Erreur serveur, appelez le developpeur.&status=error");
