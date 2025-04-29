@@ -7,14 +7,14 @@ include "message.php";
 <div class="container">
     <h1 class="text-center text-primary">Uploadez votre musique</h1>
 
-    <form action="/controller/upload_music_controller.php" method="POST" enctype="multipart/form-data">
+    <form action="controller/upload_music_controller.php" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="music_track" class="form-label">Titre de la musique</label>
             <input type="text" class="form-control" id="music_track" name="music_track" required>
         </div>
         <div class="mb-3">
-            <label for="music_genre_id" class="form-label">Genre</label>
-            <select class="form-select" id="music_genre_id" name="music_genre_id">
+            <label for="genre_name" class="form-label">Genre</label>
+            <select class="form-select" id="genre_name" name="genre_name">
                 <?php
                 $sql = "SELECT * FROM genre";
                 $stmt = $pdo->query($sql);
@@ -25,13 +25,11 @@ include "message.php";
                 ?>
             </select>
 
-            <label for="artist_name" class="form-label">Artiste</label>
-            <input type="text" class="form-control" id="artist_name" name="artist_name" required>
         </div>
 
 
-            <label for="music_file" class="form-label">Fichier de musique</label>
-            <input type="file" class="form-control" id="music_file" name="music_file" accept=".mp3, .wav, .ogg, .mp4" required>
+            <label for="music_path" class="form-label">Fichier de musique</label>
+            <input type="file" class="form-control" id="music_path" name="music_path" accept=".mp3, .wav, .flac, .aiff" required>
         </div>
         <div class="text-center">
             <input type="submit" value="Uploader la musique" class="btn btn-primary my-3">

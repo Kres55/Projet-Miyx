@@ -64,7 +64,7 @@
         if (isset($_SESSION['user_isartist'])) {
           if ($_SESSION['user_isartist']) { ?>
             <li class="nav-item">
-              <a href="view/upload_music.php">Uploadez votre musique ici</a>
+              <a href="view/upload_music.php?id=<?= $_SESSION['user_id'] ?>">Uploadez votre musique ici</a>
             </li>
         <?php }
         } ?>
