@@ -31,7 +31,7 @@ if (
     ]);
     if ($verif) {
         $_SESSION['user_isartist'] = $is_artist;
-        header("Location: ../view/homepage.php?message=Inscription réussie&status=success");
+        header("Location: ../view/homepage.php?message=Inscription réussie&status=success&page=1");
     } else {
         header("Location: ../view/sign_up.php?message=Erreur serveur, appelez le developpeur.&status=error");
     }

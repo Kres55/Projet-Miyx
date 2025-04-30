@@ -11,8 +11,18 @@
     border-radius: 15px;
 }
 
-body{
+/* body{
     height: 100vh;
+} */
+
+nav {
+        border-bottom: orange 1px solid !important;
+}
+
+nav > div > .titre {
+    font-size: 1.5em;
+    color: orange;
+    font-weight: bold;
 }
 
 .recherche {
@@ -39,6 +49,17 @@ body{
     opacity: 0.7 !important;
 }
 
+.success {
+    color: #037103;
+    opacity: 1;
+    animation: fade 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+.error {
+    color: red;
+}
+
 @keyframes fade {
     from {
         opacity: 1;
@@ -48,3 +69,4 @@ body{
         opacity: 0;
     }
 }
+

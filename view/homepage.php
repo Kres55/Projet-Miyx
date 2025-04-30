@@ -4,7 +4,36 @@ include "base.php";
 include "../controller/pdo.php";
 include "message.php";
 
-$sql = "SELECT * FROM music left join music_genre on music.music_id = music_genre.music_id left join genre on music_genre.genre_id = genre.genre_id";
+
+if (isset($_GET['page'])) {
+    $page = (int) $_GET['page'];
+    setcookie('page', $page, time() + (86400 * 30), "/"); // Cookie valable 30 jours
+} elseif (isset($_COOKIE['page'])) {
+    $page = (int) $_COOKIE['page'];
+} else {
+    $page = 1; // Valeur par défaut
+}
+
+// Pour faire la pagination il nous faut le nombre d'enfant en tout dans la base de données
+
+$sql_music_count = "SELECT COUNT(*) as total_music FROM music";
+$stmt_music_count = $pdo->query($sql_music_count);
+$music_count = $stmt_music_count->fetch(PDO::FETCH_ASSOC);
+$total = $music_count['total_music'];
+$limitPerPage = 3;
+$pageTotal = ceil($total / $limitPerPage);
+
+
+// Pour calculer le décalage
+// (numero_de_la_page * nombre d'enfant par page) - nombre d'enfant par page
+
+$offset = ($page * $limitPerPage) - $limitPerPage;
+
+// $sql = "SELECT * FROM child ORDER BY id_child ASC LIMIT $offset, $limitPerPage";
+
+$sql = "SELECT * FROM music left join music_genre on music.music_id = music_genre.music_id left join genre on music_genre.genre_id = genre.genre_id LIMIT $offset, $limitPerPage";
+
+// Exécution de la requête
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 // Vérification de l'exécution de la requête
@@ -17,8 +46,21 @@ if ($stmt === false) {
 
 
 ?>
-<main class="d-flex">
-    <section class="mt-5 text-center h-50">
+
+<div class="d-flex justify-content-center align-items-center mt-5 mb-2 ">
+    <input class="form-control me-2 mt-2 text-center recherche w-50"
+        id="search"
+        type="search"
+        placeholder="Titre, artiste.."
+        aria-label="Search">
+    <ul class="list-group d-flex flex-column mt-2 text-center w-100 opacity-75 "
+        id="results">
+    </ul>
+</div>
+
+<main class="d-flex col-md-12">
+
+    <section class="mt-5 text-center h-75 w-50 border-end border-bottom border-3 bg-body-tiertriary rounded-2 shadow-lg p-3">
         <h2>Playlist</h2>
         <div>
             <ul class="list-group mb-2" id="playlistList">
@@ -39,17 +81,7 @@ if ($stmt === false) {
         </div>
 
     </section>
-    <div class="container">
-        <div class="d-flex justify-content-center mt-5 mb-2">
-            <input class="form-control me-2 mt-2 text-center recherche w-50"
-                id="search"
-                type="search"
-                placeholder="Titre, artiste.."
-                aria-label="Search">
-            <ul class="list-group d-flex flex-column mt-2 text-center w-100 opacity-75 "
-                id="results">
-            </ul>
-        </div>
+    <div class="container bg-body-tiertriary rounded-2 shadow-lg p-3">
 
         <div class="h-100">
 
@@ -73,20 +105,57 @@ if ($stmt === false) {
                     foreach ($musicInfos as $musicInfo) {
 
                     ?>
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled d-flex flex-column flex-wrap gap-2">
                             <li>
-                                <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?>" class="text-decoration-none text-primary"><?= $musicInfo['music_track'] ?></a>
+                                <a href="view/homepage.php?page=<?= $page ?>&id=<?= $musicInfo['music_id'] ?>" class="text-decoration-none text-primary"><?= $musicInfo['music_track'] ?></a>
                             </li>
                         </ul>
                     <?php } ?>
+
+                    <ul class=" pagination justify-content-center">
+
+
+                        <li class='page-item'>
+                            <a class='page-link' href='view/homepage.php?page=<?= $pageTotal ?>'>
+                                << </a>
+                        </li>
+
+                        <?php
+
+                        for ($i = 1; $i <= $pageTotal; $i++) {
+                            if ($i <= $page + 2 && $i >= $page - 2) {
+                                echo "<li class='page-item'>
+                   <a class='page-link' href='view/homepage.php?page=$i'>$i</a></li>";
+                            }
+                        }
+                        ?>
+
+
+                        <li class='page-item'>
+                            <a class='page-link' href='view/homepage.php?page=<?= $pageTotal ?>'>>></a>
+                        </li>
+
+
+
+
+
                 </div>
                 <div class="tab-pane fade" id="genre" role="tabpanel" aria-labelledby="genre-tab">
                     <!-- Onglets internes -->
                     <ul class="nav nav-tabs mt-3" id="innerTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
-                                <?= $musicInfo['genre_name'] ?>
-                            </button>
+                        <li class="nav-item d-flex" role="presentation">
+                            <?php
+
+                            foreach ($musicInfos as $musicInfo) {
+
+                            ?>
+
+                                <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
+                                    <?= $musicInfo['genre_name'] ?>
+                                </button>
+
+                            <?php } ?>
+
                         </li>
                     </ul>
 
@@ -95,7 +164,7 @@ if ($stmt === false) {
                         <div class="tab-pane fade show active" id="sub-genre" role="tabpanel" aria-labelledby="sub-genre-tab">
                             <ul class="list-unstyled">
                                 <li>
-                                    <a href="view/homepage.php?id=<?= $musicInfo['music_id'] ?? '' ?>" class="text-decoration-none text-primary">
+                                    <a href="view/homepage.php?id=<?= $musicInfo['music_genre_id'] ?? '' ?>" class="text-decoration-none text-primary">
                                         <?= $musicInfo['genre_music'] ?? '' ?>
                                     </a>
                                 </li>
@@ -115,12 +184,12 @@ if ($stmt === false) {
 </main>
 
 <div class="container h-100">
-    <div class="row justify-content-center gap-5 border-top mb-4 align-items-stretch  h-100">
+    <div class="row justify-content-center gap-5 border-top mb-4 align-items-stretch h-50">
 
 
 
         <div class="col-md-12">
-            <form id="infoMusic" class="w-100 mx-auto border border-3 border-primary rounded-2 shadow-lg p-3 mb-2 mt-5" method="GET">
+            <form id="infoMusic" class="w-100 mx-auto border border-3  rounded-2 shadow-lg p-3 mt-5" method="GET">
 
 
                 <label class="form-label" for="music_track">titre :</label>
@@ -134,7 +203,7 @@ if ($stmt === false) {
 
             </form>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12 ">
             <div class="card bg-dark text-white p-3 lecteur">
                 <audio id="audio" class=""></audio>
 
@@ -147,10 +216,10 @@ if ($stmt === false) {
 
                 <div class="mx-auto mb-3 w-100">
                     <button id="mute" class="btn btn-light"><i class="bi bi-volume-up-fill"></i></button>
-                    <input type="range" id="volume" class="form-range mx-3  w-25" min="0" max="1" step="0.1" value="0.2">
-                    <button id="prev" class="btn btn-light mx-2 ms-5"><i class="bi bi-skip-backward-fill"></i></button>
-                    <button id="playPause" class="btn btn-primary mx-2"><i class="bi bi-play-fill"></i></button>
-                    <button id="next" class="btn btn-light mx-2"><i class="bi bi-skip-forward-fill"></i></button>
+                    <input type="range" id="volume" class="form-range mx-2 w-25" min="0" max="1" step="0.1" value="0.2">
+                    <button id="prev" class="btn btn-light mx-2 ms-1"><i class="bi bi-skip-backward-fill"></i></button>
+                    <button id="playPause" class="btn btn-primary mx-1"><i class="bi bi-play-fill"></i></button>
+                    <button id="next" class="btn btn-light mx-1"><i class="bi bi-skip-forward-fill"></i></button>
 
 
                 </div>
@@ -237,7 +306,8 @@ if ($stmt === false) {
         .then(track => {
             //console.log(track);
 
-            audio.src = track.music_path;
+            // Vérification de l'existence de la musique
+            audio.src = "musiques/uploads/" + track.music_path;
             titleInput.value = typeof(track.music_track) !== "undefined" ? track.music_track : "";
             licenseInput.value = typeof(track.music_licence) !== "undefined" ? track.music_licence : "";
             sourceInput.value = typeof(track.music_source) !== "undefined" ? track.music_source : "";
@@ -262,19 +332,23 @@ if ($stmt === false) {
         playPauseBtn.innerHTML = `<i class="bi bi-play-fill"></i>`;
     });
 
+
     audio.addEventListener("timeupdate", () => {
         progressBar.value = (audio.currentTime / audio.duration) * 100 || 0;
         currentTimeDisplay.textContent = formatTime(audio.currentTime);
         durationDisplay.textContent = formatTime(audio.duration);
     });
 
+
     progressBar.addEventListener("input", () => {
         audio.currentTime = (progressBar.value / 100) * audio.duration;
     });
 
+
     volumeSlider.addEventListener("input", () => {
         audio.volume = volumeSlider.value;
     });
+
 
     muteBtn.addEventListener("click", () => {
         audio.muted = !audio.muted;

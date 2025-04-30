@@ -17,10 +17,10 @@
   <title>Miyx - Ecoutez de la musique indépendante gratuitement</title>
 </head>
 
-<body class="bg-body-dark">
+<body class="">
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="view/homepage.php">Miyx</a>
+      <a class="navbar-brand titre" href="view/homepage.php?page=1">Miyx</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

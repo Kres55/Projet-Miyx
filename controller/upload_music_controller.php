@@ -2,8 +2,8 @@
 
 include "pdo.php";
 session_start();
-echo 'upload_max_filesize = ' . ini_get('upload_max_filesize') . "<br>";
-echo 'post_max_size = ' . ini_get('post_max_size') . "<br>";
+// echo 'upload_max_filesize = ' . ini_get('upload_max_filesize') . "<br>";
+// echo 'post_max_size = ' . ini_get('post_max_size') . "<br>";
 
 
 if (!isset($_SESSION['user_id'])) {
@@ -16,36 +16,38 @@ if (!isset($_SESSION['user_id'])) {
 
 if (
     !empty($_POST['music_track']) &&
-    !empty($_POST['genre_name'])
+    !empty($_POST['genre_name']) &&
+    !empty($_POST['music_source']) &&
+    !empty($_POST['music_licence'])
 ) {
 
-    if (!isset($_FILES['music_path'])) {
-        echo " Aucun fichier reçu dans $_FILES.<br>";
-    } else {
-        echo " Fichier trouvé dans $_FILES.<br>";
+    // if (!isset($_FILES['music_path'])) {
+    //     echo " Aucun fichier reçu dans $_FILES.<br>";
+    // } else {
+    //     echo " Fichier trouvé dans $_FILES.<br>";
 
-        $tmpName = $_FILES['music_path']['tmp_name'];
-        $errorCode = $_FILES['music_path']['error'];
+    //     $tmpName = $_FILES['music_path']['tmp_name'];
+    //     $errorCode = $_FILES['music_path']['error'];
 
-        // Vérifie l'erreur d'upload
-        if ($errorCode !== UPLOAD_ERR_OK) {
-            echo " Erreur d'upload : Code $errorCode<br>";
-        } else {
-            echo " Upload sans erreur.<br>";
-        }
+    //     // Vérifie l'erreur d'upload
+    //     if ($errorCode !== UPLOAD_ERR_OK) {
+    //         echo " Erreur d'upload : Code $errorCode<br>";
+    //     } else {
+    //         echo " Upload sans erreur.<br>";
+    //     }
 
-        // Vérifie si le fichier temporaire existe
-        if (!is_uploaded_file($tmpName)) {
-            echo " Le fichier temporaire n'est pas reconnu comme un fichier uploadé valide.<br>";
-        } elseif (!file_exists($tmpName)) {
-            echo " Le fichier temporaire n'existe pas physiquement.<br>";
-        } else {
-            echo " Le fichier temporaire est présent et reconnu.<br>";
-        }
+    //     // Vérifie si le fichier temporaire existe
+    //     if (!is_uploaded_file($tmpName)) {
+    //         echo " Le fichier temporaire n'est pas reconnu comme un fichier uploadé valide.<br>";
+    //     } elseif (!file_exists($tmpName)) {
+    //         echo " Le fichier temporaire n'existe pas physiquement.<br>";
+    //     } else {
+    //         echo " Le fichier temporaire est présent et reconnu.<br>";
+    //     }
 
-        // Bonus : afficher la taille du fichier
-        echo "Taille du fichier uploadé : " . $_FILES['music_path']['size'] . " octets<br>";
-    }
+    //     // Bonus : afficher la taille du fichier
+    //     echo "Taille du fichier uploadé : " . $_FILES['music_path']['size'] . " octets<br>";
+    // }
 
 
 
@@ -84,24 +86,30 @@ if (
                 if(move_uploaded_file($tmpName, "../musiques/uploads/" . $newName)) {
                    echo "Le fichier a été uploadé avec succès.";
 
-                    $source = '';
-                    $licence = '';
+ 
                     $id = $_SESSION['user_id'];
                     $sql = "INSERT INTO music (music_path, music_track, music_source, music_licence, user_id) VALUES (?,?,?,?,?)";
                     $stmt = $pdo->prepare($sql);
                     $verif = $stmt->execute([
                         $newName,
                         $_POST["music_track"],
-                        $source,
-                        $licence,
+                        $_POST["music_source"],
+                        $_POST["music_licence"],
                         $id
                     ]);
                 } else {
                     echo "Le fichier n'a pas pu être uploadé.";
-                    print_r(error_get_last());
                 }
 
+                $idMusic = $pdo->lastInsertId();
+                $sqlGenre = "INSERT INTO music_genre (music_id, genre_id) VALUES (?, ?)";
+                $stmt = $pdo->prepare($sqlGenre);
+                $stmt->execute([
+                    $idMusic,
+                    $_POST["genre_name"]
+                ]);
 
+                
                 } catch (Exception $e) {
                     $message = $e->getMessage();
                     header("Location: ../view/upload_music.php?message=$message&status=error");
@@ -120,7 +128,6 @@ if (
             exit;
         }
     } else {
-        var_dump($_POST);
-    //header("Location: ../view/upload_music.php?message=Veuillez remplir le formulaire d'upload correctement.&status=error");
+    header("Location: ../view/upload_music.php?message=Veuillez remplir le formulaire d'upload correctement.&status=error");
     exit;
 }

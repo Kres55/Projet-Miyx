@@ -28,13 +28,26 @@ include "message.php";
         </div>
 
 
-            <label for="music_path" class="form-label">Fichier de musique</label>
-            <input type="file" class="form-control" id="music_path" name="music_path" accept=".mp3, .wav, .flac, .aiff" required>
+        <label for="music_path" class="form-label">Fichier de musique</label>
+        <input type="file" class="form-control" id="music_path" name="music_path" accept=".mp3, .wav, .flac, .aiff" required>
+
+
+
+        <p class="bold-3 text-warning mt-4"> Afin de vous crediter comme il se doit indiquez ou l'on peut trouver votre musique , ainsi que le lien de votre license</p>
+
+        <div class="mb-3">
+            <label for="music_source" class="form-label">Source</label>
+            <input type="text" class="form-control" id="music_source" name="music_source" placeholder="lien vers votre musique..." required>
         </div>
-        <div class="text-center">
-            <input type="submit" value="Uploader la musique" class="btn btn-primary my-3">
+        <div class="mb-3">
+            <label for="music_licence" class="form-label">License</label>
+            <input type="text" class="form-control" id="music_licence" name="music_licence" placeholder="lien vers la license lié a votre musique..." required>
         </div>
-    </form>
+</div>
+<div class="text-center">
+    <input type="submit" value="Uploader la musique" class="btn btn-primary my-3">
+</div>
+</form>
 </div>
 
 

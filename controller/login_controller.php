@@ -18,7 +18,7 @@ include "pdo.php";
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_isartist'] = $user['user_isartist'];
 
-                header("Location: ../view/homepage.php"); 
+                header("Location: ../view/homepage.php?page=1"); 
             }else{
                 header("Location: login.php?message=Identifiants incorrectes1.&status=error"); 
             }
