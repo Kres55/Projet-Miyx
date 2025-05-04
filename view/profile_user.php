@@ -6,7 +6,7 @@ include "../controller/pdo.php";
 //$sql = "SELECT id_user, firstname_user, lastname_user, mail_user, role_user, subject_user, image_user FROM user";
 
 $id = $_SESSION['user_id'];
-$sql = "SELECT user_lastname, user_firstname, user_mail FROM users WHERE user_id = '$id'";
+$sql = "SELECT user_lastname, user_firstname, user_mail, user_avatar FROM users WHERE user_id = '$id'";
 $stmt = $pdo->query($sql);
 $users = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -19,12 +19,19 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">Mes informations</button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">Premium</button>
-        </li>
     </ul>
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+            <!-- Affichage de l'avatar -->
+            <?php if (!empty($users['user_avatar'])): ?>
+                <div class="text-center mb-3">
+                    <img src="avatars/<?= htmlentities($users['user_avatar']) ?>" alt="Avatar" class="rounded-circle" width="120" height="120">
+                </div>
+            <?php endif; ?>
+            <!-- Bouton pour changer l'avatar -->
+            <div class="text-center mb-3">
+                <a href="view/update_avatar_form.php" class="btn btn-outline-primary">Changer mon avatar</a>
+            </div>
             <ul class="list-unstyled">
                 <li>
                     Nom : <span><?= htmlentities($users['user_lastname']) ?> </span>
@@ -44,12 +51,6 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
                 <a href="controller/delete_user_controller.php?id=<?= $id ?>" class="btn btn-danger delete_btn mt-5" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer votre compte</a>
             </div>
         </div>
-    </div>
-    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-        <p>Contenu de l'onglet 2.</p>
-    </div>
-    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-        <p>Contenu de l'onglet 3.</p>
     </div>
 </div>
 </div>

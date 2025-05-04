@@ -41,21 +41,27 @@ if ($stmt === false) {
     echo "Erreur lors de l'exécution de la requête.";
 } else {
     $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql_genres = "SELECT DISTINCT genre.genre_id, genre.genre_name FROM genre ORDER BY genre.genre_name ASC";
+    $stmt_genres = $pdo->query($sql_genres);
+    $allGenres = $stmt_genres->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
 
 ?>
 
-<div class="d-flex justify-content-center align-items-center mt-5 mb-2 ">
-    <input class="form-control me-2 mt-2 text-center recherche w-50"
-        id="search"
-        type="search"
-        placeholder="Titre, artiste.."
-        aria-label="Search">
-    <ul class="list-group d-flex flex-column mt-2 text-center w-100 opacity-75 "
-        id="results">
-    </ul>
+<div class="d-none d-md-block d-sm-none mt-5 mb-2">
+    <div class="d-flex flex-column align-items-center position-relative">
+        <input class="form-control mt-2 text-center recherche w-50"
+            id="search"
+            type="search"
+            placeholder="Titre, artiste.."
+            aria-label="Search">
+        <ul class="list-group mt-2 text-center w-50 opacity-75 mt-5"
+            style="z-index: 1; max-height: 200px; overflow-y: auto; position: absolute;"
+            id="results">
+        </ul>
+    </div>
 </div>
 
 <main class="d-flex col-md-12">
@@ -141,37 +147,59 @@ if ($stmt === false) {
 
                 </div>
                 <div class="tab-pane fade" id="genre" role="tabpanel" aria-labelledby="genre-tab">
-                    <!-- Onglets internes -->
+                    <!-- Sous-onglets des genres -->
                     <ul class="nav nav-tabs mt-3" id="innerTab" role="tablist">
-                        <li class="nav-item d-flex" role="presentation">
-                            <?php
-
-                            foreach ($musicInfos as $musicInfo) {
-
-                            ?>
-
-                                <button class="nav-link active" id="sub-genre-tab" data-bs-toggle="tab" data-bs-target="#sub-genre" type="button" role="tab" aria-controls="sub-genre" aria-selected="true">
-                                    <?= $musicInfo['genre_name'] ?>
+                        <?php foreach ($allGenres as $index => $genre): ?>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link <?= $index === 0 ? 'active' : '' ?>"
+                                    id="sub-genre-tab-<?= $genre['genre_id'] ?>"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#sub-genre-<?= $genre['genre_id'] ?>"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="sub-genre-<?= $genre['genre_id'] ?>"
+                                    aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">
+                                    <?= htmlentities($genre['genre_name']) ?>
                                 </button>
-
-                            <?php } ?>
-
-                        </li>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
 
                     <!-- Contenu des sous-onglets -->
                     <div class="tab-content mt-2" id="innerTabContent">
-                        <div class="tab-pane fade show active" id="sub-genre" role="tabpanel" aria-labelledby="sub-genre-tab">
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a href="view/homepage.php?id=<?= $musicInfo['music_genre_id'] ?? '' ?>" class="text-decoration-none text-primary">
-                                        <?= $musicInfo['genre_music'] ?? '' ?>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <?php foreach ($allGenres as $index => $genre): ?>
+                            <?php
+                            $sql_music_by_genre = "SELECT music.music_id, music.music_track
+                                       FROM music
+                                       JOIN music_genre ON music.music_id = music_genre.music_id
+                                       WHERE music_genre.genre_id = ?";
+                            $stmt = $pdo->prepare($sql_music_by_genre);
+                            $stmt->execute([$genre['genre_id']]);
+                            $musics = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
+                            <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>"
+                                id="sub-genre-<?= $genre['genre_id'] ?>"
+                                role="tabpanel"
+                                aria-labelledby="sub-genre-tab-<?= $genre['genre_id'] ?>">
+
+                                <?php if (count($musics) > 0): ?>
+                                    <ul class="list-unstyled">
+                                        <?php foreach ($musics as $music): ?>
+                                            <li>
+                                                <a href="view/homepage.php?id=<?= $music['music_id'] ?>" class="text-decoration-none text-primary">
+                                                    <?= htmlentities($music['music_track']) ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php else: ?>
+                                    <p class="text-muted">Aucune musique trouvée pour ce genre.</p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
+
                 <div class="tab-pane fade" id="artiste" role="tabpanel" aria-labelledby="artiste-tab">
                     <p>Contenu de l'onglet Artiste.</p>
                 </div>
@@ -184,7 +212,7 @@ if ($stmt === false) {
 </main>
 
 <div class="container h-100">
-    <div class="row justify-content-center gap-5 border-top mb-4 align-items-stretch h-50">
+    <div class="row justify-content-center gap-5 mb-4 align-items-stretch h-50">
 
 
 

@@ -70,3 +70,16 @@ nav > div > .titre {
     }
 }
 
+.liste:hover{
+    background-color: orange !important;
+    transition: all 0.3s ease;
+}
+
+.scale-text {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.scale-text:hover {
+    transform: scale(1.1);
+}

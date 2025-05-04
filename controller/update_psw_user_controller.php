@@ -3,7 +3,8 @@
 include 'pdo.php';
 session_start();
 
-if (!isset($_SESSION['name'])) {
+if (!isset($_SESSION['user_id'])) {
+    //j'ai mis user_id à la place de session name comme c'est la clé que tu utilises ailleurs pour rester cohérent
     header('Location: ../view/login.php');
     exit;
 }
@@ -41,6 +42,7 @@ if (!empty($_POST['old_psw_user']) && !empty($_POST['user_password'])) {
         exit;
     }
 } else {
-    header("Location: ../view/psw_update_form/message=Formulaire invalide&status=error");
+    header("Location: ../view/psw_update_form.php?message=Formulaire invalide&status=error");
+
     exit;
 }

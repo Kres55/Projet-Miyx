@@ -23,13 +23,15 @@ search.addEventListener("input", function (e) {
     fetch("controller/search.php", data)
         .then(response => response.json())
         .then(res => {
-            console.log(res);
+            // console.log(res);
             results.innerHTML = "";
 
             for (let music of res) {
                 const li = document.createElement('li');
                 li.classList.add("list-group-item");
-                li.innerHTML = `${music.music_track} par ${music.user_artistname}`;
+                li.classList.add("liste");
+                li.innerHTML = `<span class="scale-text">${music.music_track} par ${music.user_artistname}</span>`;
+
 
                 li.style.cursor = "pointer";
 

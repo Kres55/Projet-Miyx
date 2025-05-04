@@ -3,7 +3,8 @@
 include "pdo.php";
 session_start();
 
-if (!isset($_SESSION['name'])) {
+if (!isset($_SESSION['user_id'])) {
+    //j'ai mis user_id à la place de session name comme c'est la clé que tu utilises ailleurs pour rester cohérent
     header('Location: ../view/login.php');
     exit;
 }
@@ -26,7 +27,7 @@ if (
 
     if ($verif) {
         $_SESSION['name'] = $_POST["user_firstname"];
-        header("Location: ../view/modify_user.php?message=Mise à jour reussi&status=success");
+        header("Location: ../view/modify_user.php?message=Mise à jour reussie&status=success");
         exit;
     } else {
         header("Location: ../view/modify_user.php?message=Problème serveur&status=error");
