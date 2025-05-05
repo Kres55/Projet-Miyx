@@ -1,5 +1,4 @@
 <?php
-
 include "base.php";
 include "../controller/pdo.php";
 include "message.php";
@@ -66,7 +65,7 @@ if ($stmt === false) {
 
 <main class="d-flex col-md-12">
 
-    <section class="mt-5 text-center h-75 w-50 border-end border-bottom border-3 bg-body-tiertriary rounded-2 shadow-lg p-3">
+    <section class="mt-5 text-center h-75 w-50 border-end border-bottom border-3 rounded-2 shadow-lg p-3">
         <h2>Playlist</h2>
         <div>
             <ul class="list-group mb-2" id="playlistList">
@@ -75,16 +74,17 @@ if ($stmt === false) {
 
             <!-- Bouton + pour ajouter une nouvelle playlist -->
             <button id="addPlaylistBtn" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-plus"></i> <!-- Icône Bootstrap -->
+                <i class="bi bi-plus"></i>
             </button>
-
-            <!-- Champ input caché au début -->
-            <div id="playlistInputContainer" class="mt-2" style="display: none;">
-                <input type="text" id="newPlaylistName" class="form-control" placeholder="Nom de la playlist">
-                <button class="btn btn-sm btn-success mt-1" id="savePlaylistBtn">Créer</button>
-            </div>
+            <form action="controller/add_playlist_controller.php" method="POST">
+                <!-- Champ input caché au début -->
+                <div id="playlistInputContainer" class="mt-2" style="display: none;">
+                    <input type="text" name="name" id="newPlaylistName" class="form-control" placeholder="Nom de la playlist">
+                    <button class="btn btn-sm btn-success mt-1" id="savePlaylistBtn">Créer</button>
+                </div>
 
         </div>
+        </form>
 
     </section>
     <div class="container bg-body-tiertriary rounded-2 shadow-lg p-3">
@@ -97,9 +97,6 @@ if ($stmt === false) {
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="genre-tab" data-bs-toggle="tab" data-bs-target="#genre" type="button" role="tab" aria-controls="genre" aria-selected="false">Genre</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="artiste-tab" data-bs-toggle="tab" data-bs-target="#artiste" type="button" role="tab" aria-controls="artiste" aria-selected="false">Artiste</button>
                 </li>
             </ul>
 
@@ -200,9 +197,6 @@ if ($stmt === false) {
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="artiste" role="tabpanel" aria-labelledby="artiste-tab">
-                    <p>Contenu de l'onglet Artiste.</p>
-                </div>
             </div>
 
 
@@ -411,5 +405,32 @@ if ($stmt === false) {
                 });
             })
             .catch((err) => console.error(err));
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("controller/view_playlist_controller.php")
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("playlistList");
+                list.innerHTML = ""; // Vide la liste
+
+                if (data.success && data.playlists.length > 0) {
+                    data.playlists.forEach(playlist => {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item";
+                        li.style.cursor = "pointer";
+                        li.style.backgroundColor = "orange";
+                        li.style.color = "blue";
+                        li.style.fontWeight = "bold";
+                        li.textContent = playlist.playlist_name;
+                        list.appendChild(li);
+                    });
+                } else {
+                    list.innerHTML = "<li class='list-group-item'>Aucune playlist</li>";
+                }
+            })
+            .catch(error => {
+                console.error("Erreur de récupération des playlists :", error);
+            });
     });
 </script>
