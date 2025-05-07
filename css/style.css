@@ -83,3 +83,27 @@ nav > div > .titre {
 .scale-text:hover {
     transform: scale(1.1);
 }
+
+div>div>.pagination>.page-item>a {
+    font-weight: bold;
+}
+
+div > div > .pagination > .page-item > a:hover {
+    background-color: orange !important;
+    transition: all 0.3s ease;
+    scale: 1.1;
+}
+
+div>div>.pagination>.page-item:first-child a:hover {
+    background-color: lightblue !important;
+}
+
+div>div>.pagination>.page-item:last-child a:hover {
+    background-color: lightblue !important;
+}
+
+.darkmode-toggle {
+    z-index: 1;
+    opacity: 0.8;
+}
+

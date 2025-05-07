@@ -1,7 +1,7 @@
 <?php session_start();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8">
@@ -24,10 +24,6 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <!-- Barre de recherche centrée (visible en version mobile, sans bouton) -->
-      <form class="d-flex d-lg-none mx-auto my-2" role="search">
-        <input class="form-control me-2" type="search" placeholder="titre, artiste, genre..." aria-label="Search">
-      </form>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
@@ -43,10 +39,6 @@
               <a class="nav-link text-primary" href="controller/logout.php">Déconnexion</a>
             </li>
           <?php } ?>
-
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Premium</a>
-          </li>
 
           <li class="nav-item">
             <?php if (!isset($_SESSION['name'])) { ?>

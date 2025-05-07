@@ -32,7 +32,7 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="text-center mb-3">
                 <a href="view/update_avatar_form.php" class="btn btn-outline-primary">Changer mon avatar</a>
             </div>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled text-center">
                 <li>
                     Nom : <span><?= htmlentities($users['user_lastname']) ?> </span>
                 </li>
@@ -43,9 +43,6 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
                     Mail : <?= htmlentities($users['user_mail']) ?>
                 </li>
             </ul>
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-            </div>
             <div class="text-center">
                 <a href="view/modify_user.php" class="btn btn-primary mt-5 me-5">Modifier</a>
                 <a href="controller/delete_user_controller.php?id=<?= $id ?>" class="btn btn-danger delete_btn mt-5" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer votre compte</a>
@@ -56,8 +53,6 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
 </div>
 <div class="row">
     <div class="col-lg-12 text-center">
-
-
 
 
     </div>

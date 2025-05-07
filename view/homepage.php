@@ -49,7 +49,7 @@ if ($stmt === false) {
 
 ?>
 
-<div class="d-none d-md-block d-sm-none mt-5 mb-2">
+<div class="mt-5 mb-2">
     <div class="d-flex flex-column align-items-center position-relative">
         <input class="form-control mt-2 text-center recherche w-50"
             id="search"
@@ -250,7 +250,8 @@ if ($stmt === false) {
         <div class="col-md-12">
             <footer class="">
                 <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                    <li class="nav-item"><a href="legal_notices.php" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
+                    <li class="nav-item"><a href="view/politique_confidentialite.php" class="nav-link px-2 text-body-secondary">Politique de confidentialité</a></li>
+                    <li class="nav-item"><a href="view/condition_utilisation.php" class="nav-link px-2 text-body-secondary">Conditions générales d'utilisation</a></li>
                 </ul>
                 <p class="text-center text-body-secondary">&copy; 2025 Miyx</p>
             </footer>

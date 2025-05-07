@@ -42,7 +42,7 @@ include 'message.php';
     </div>
 
     <div class="text-center">
-        <p>En vous inscrivant, vous acceptez nos <a href="condition_utilisation.php">Conditions d'utilisation</a> et notre <a href="politique_de_confidentialité.php">Politique de confidentialité</a>.</p>
+        <p>En vous inscrivant, vous acceptez nos <a href="view/condition_utilisation.php">Conditions d'utilisation</a> et notre <a href="view/politique_confidentialite.php">Politique de confidentialité</a>.</p>
     </div>
 
 </form>
