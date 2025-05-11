@@ -19,7 +19,7 @@ if (
 
     $is_artist = $_POST['artist'] === 'yes' ? 1 : 0;
 
-    $sql = "INSERT INTO users (user_firstname, user_lastname, user_mail, user_password, user_isartist) VALUES (?,?,?,?,?)";
+    $sql = "INSERT INTO users (user_firstname, user_lastname, user_mail, user_password, user_isartist, user_artistname) VALUES (?,?,?,?,?,?)";
 
     $stmt = $pdo->prepare($sql);
     $verif = $stmt->execute([
@@ -27,7 +27,8 @@ if (
         $_POST["user_lastname"],
         $_POST["user_mail"],
         $psw,
-        $is_artist
+        $is_artist,
+        $_POST["user_artistname"]
     ]);
     if ($verif) {
         $_SESSION['user_isartist'] = $is_artist;

@@ -3,10 +3,16 @@
 include "pdo.php";
 session_start();
 
+
 if (!isset($_SESSION['user_id'])) {
-    //j'ai mis user_id à la place de session name comme c'est la clé que tu utilises ailleurs pour rester cohérent
     header('Location: ../view/login.php');
     exit;
+}
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['token']) {
+    // Token absent ou invalide : on bloque
+    header("Location: ../view/modify_user.php?message=Erreur CSRF détectée&status=error");
+    echo "Erreur CSRF détectée!!";
 }
 
 if (

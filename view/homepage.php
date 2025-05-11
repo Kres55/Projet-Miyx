@@ -13,7 +13,7 @@ if (isset($_GET['page'])) {
     $page = 1; // Valeur par défaut
 }
 
-// Pour faire la pagination il nous faut le nombre d'enfant en tout dans la base de données
+// Pour faire la pagination il nous faut le nombre de musique en tout dans la base de données
 
 $sql_music_count = "SELECT COUNT(*) as total_music FROM music";
 $stmt_music_count = $pdo->query($sql_music_count);
@@ -23,14 +23,13 @@ $limitPerPage = 3;
 $pageTotal = ceil($total / $limitPerPage);
 
 
-// Pour calculer le décalage
-// (numero_de_la_page * nombre d'enfant par page) - nombre d'enfant par page
-
 $offset = ($page * $limitPerPage) - $limitPerPage;
 
-// $sql = "SELECT * FROM child ORDER BY id_child ASC LIMIT $offset, $limitPerPage";
 
-$sql = "SELECT * FROM music left join music_genre on music.music_id = music_genre.music_id left join genre on music_genre.genre_id = genre.genre_id LIMIT $offset, $limitPerPage";
+$sql = "SELECT * FROM music 
+        left join music_genre on music.music_id = music_genre.music_id 
+        left join genre on music_genre.genre_id = genre.genre_id 
+        LIMIT $offset, $limitPerPage";
 
 // Exécution de la requête
 $stmt = $pdo->prepare($sql);
@@ -40,7 +39,8 @@ if ($stmt === false) {
     echo "Erreur lors de l'exécution de la requête.";
 } else {
     $musicInfos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $sql_genres = "SELECT DISTINCT genre.genre_id, genre.genre_name FROM genre ORDER BY genre.genre_name ASC";
+    $sql_genres = "SELECT DISTINCT genre.genre_id, genre.genre_name FROM genre 
+    ORDER BY genre.genre_name ASC";
     $stmt_genres = $pdo->query($sql_genres);
     $allGenres = $stmt_genres->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -87,7 +87,7 @@ if ($stmt === false) {
         </form>
 
     </section>
-    <div class="container bg-body-tiertriary rounded-2 shadow-lg p-3">
+    <div class="container bg-body-tiertiary rounded-2 shadow-lg p-3">
 
         <div class="h-100">
 
@@ -242,8 +242,6 @@ if ($stmt === false) {
                     <button id="prev" class="btn btn-light mx-2 ms-1"><i class="bi bi-skip-backward-fill"></i></button>
                     <button id="playPause" class="btn btn-primary mx-1"><i class="bi bi-play-fill"></i></button>
                     <button id="next" class="btn btn-light mx-1"><i class="bi bi-skip-forward-fill"></i></button>
-
-
                 </div>
             </div>
         </div>

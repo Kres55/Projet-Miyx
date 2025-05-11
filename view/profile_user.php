@@ -45,7 +45,9 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
             </ul>
             <div class="text-center">
                 <a href="view/modify_user.php" class="btn btn-primary mt-5 me-5">Modifier</a>
-                <a href="controller/delete_user_controller.php?id=<?= $id ?>" class="btn btn-danger delete_btn mt-5" data-bs-toggle="modal" data-bs-target="#validation_delete">Supprimer votre compte</a>
+                <button type="button" class="btn btn-danger mt-5" data-bs-toggle="modal" data-bs-target="#validation_delete">
+                    Supprimer votre compte
+                </button>
             </div>
         </div>
     </div>
@@ -63,19 +65,24 @@ $users = $stmt->fetch(PDO::FETCH_ASSOC);
 <div class="modal" id="validation_delete" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Supression</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Voulez vous vraiment supprimer votre compte ?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-                <a id="delete" href="" class="btn btn-danger">Supprimer</a>
-            </div>
+            <form method="POST" action="controller/delete_user_controller.php">
+                <div class="modal-header">
+                    <h5 class="modal-title">Suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous vraiment supprimer votre compte ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['token'] ?>"> 
+                    <input type="hidden" name="user_id" value="<?= $id ?>"> 
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 <script>

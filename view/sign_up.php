@@ -28,14 +28,17 @@ include 'message.php';
 
     <div class="d-flex justify-content-center gap-4">
         <div>
-            <input type="radio" id="artist" name="artist" value="1">
+            <input type="radio" id="artist" name="artist" value="yes">
             <label for="artist">Oui</label>
         </div>
         <div>
-            <input type="radio" id="not_artist" name="artist" value="0">
+            <input type="radio" id="not_artist" name="artist" value="no" checked>
             <label for="not_artist">Non</label>
         </div>
     </div>
+
+    <label class="form-label mt-4" for="user_lastname">Si oui quel est votre nom de scène?</label>
+    <input class="form-control" type="text" name="user_artistname" placeholder="Entrez votre Nom de scene">
 
     <div class="text-center">
         <input type="submit" value="S'inscrire" class="btn btn-primary my-3">

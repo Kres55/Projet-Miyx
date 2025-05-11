@@ -1,4 +1,5 @@
 <?php
+
 include "base.php";
 include 'message.php';
 include "../controller/pdo.php";
@@ -9,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+
 $id = $_SESSION['user_id'];
 $sql = "SELECT user_firstname, user_lastname, user_mail FROM users WHERE user_id = '$id'";
 $stmt = $pdo->query($sql);
@@ -16,6 +18,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 ?>
+
 <h1 class="text-center text-primary">Modifier mon profil</h1>
 
 <form class="w-50 mx-auto" action="controller/modify_user_controller.php" method="POST">
@@ -39,6 +42,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <!-- <div class="text-center my-3">
         <a class="btn btn-warning" href="view/image_update_form.php">Modifier la photo de profile</a>
     </div> -->
+
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['token']; ?>">
 
     <div class="text-center">
         <input type="submit" value="Mise à jour" class="btn btn-primary my-3">
