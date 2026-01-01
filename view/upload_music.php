@@ -33,7 +33,7 @@ include "message.php";
 
 
 
-        <p class="bold-3 text-warning mt-4"> Afin de vous crediter comme il se doit indiquez ou l'on peut trouver votre musique , ainsi que le lien de votre license</p>
+        <p class="bold-3 text-warning mt-4 h4"> Afin de vous crediter comme il se doit indiquez ou l'on peut trouver votre musique , ainsi que le lien de votre license</p>
 
         <div class="mb-3">
             <label for="music_source" class="form-label">Source</label>

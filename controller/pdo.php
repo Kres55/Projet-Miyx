@@ -17,5 +17,9 @@ $user = $_ENV['DB_USER'];
 $psw = $_ENV['DB_PSW'];
 
 
-
-$pdo = new PDO("mysql:host=$host;dbname=$name", $user, $psw);
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$name", $user, $psw);
+    $pdo->exec('SET NAMES utf8');
+} catch (PDOException $e) {
+    die("Erreur de connexion à la base de données : ." . $e->getMessage());
+}

@@ -21,7 +21,3 @@ LIMIT 5;";
 } else {
     echo json_encode(["compteur" => $_POST["search"]]);
 }
-
-
-// La méthode attend un POST, mais le JS de homepage.php utilise GET :
-//Cela signifie que la condition if (!empty($_POST["search"])...) ne sera jamais vraie actuellement.a verifier.

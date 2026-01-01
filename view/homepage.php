@@ -1,8 +1,4 @@
 <?php
-include "base.php";
-include "../controller/pdo.php";
-include "message.php";
-
 
 if (isset($_GET['page'])) {
     $page = (int) $_GET['page'];
@@ -12,6 +8,12 @@ if (isset($_GET['page'])) {
 } else {
     $page = 1; // Valeur par défaut
 }
+include "base.php";
+include "../controller/pdo.php";
+include "message.php";
+
+
+
 
 // Pour faire la pagination il nous faut le nombre de musique en tout dans la base de données
 
@@ -45,8 +47,6 @@ if ($stmt === false) {
     $allGenres = $stmt_genres->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-
 ?>
 
 <div class="mt-5 mb-2">
@@ -57,7 +57,7 @@ if ($stmt === false) {
             placeholder="Titre, artiste.."
             aria-label="Search">
         <ul class="list-group mt-2 text-center w-50 opacity-75 mt-5"
-            style="z-index: 1; max-height: 200px; overflow-y: auto; position: absolute;"
+            style="position: absolute;"
             id="results">
         </ul>
     </div>
@@ -272,6 +272,8 @@ if ($stmt === false) {
     const progressBar = document.getElementById("progress");
     const currentTimeDisplay = document.getElementById("currentTime");
     const durationDisplay = document.getElementById("duration");
+    const next = document.getElementById("next");
+    const prev = document.getElementById("prev");
 
     const titleInput = document.getElementById("music_track");
     const licenseInput = document.getElementById("music_license");
@@ -432,4 +434,75 @@ if ($stmt === false) {
                 console.error("Erreur de récupération des playlists :", error);
             });
     });
+
+
+    //je prend l'id actuel de la musique comme parametre
+    function getNextMusicByValidId(id) {
+        //on recupere le prochain id valide
+        fetch("controller/search_next_id_controller.php?id=" + id)
+            .then(res => res.json()) 
+            .then(data => {
+                if (data.music_id) {
+                    nextId = data.music_id;
+                    let url = new URL(window.location.href);
+                    url.searchParams.set('id', nextId); 
+                    window.history.pushState({}, '', url); 
+                    fetch("controller/view_music_controller.php?id=" + nextId)
+                        .then(res => res.json())
+                        .then(track => {
+                            // console.log(track);
+                            audio.src = "musiques/uploads/" + track.music_path;
+                            titleInput.value = track.music_track ?? "";
+                            licenseInput.value = track.music_licence ?? "";
+                            sourceInput.value = track.music_source ?? "";
+                            audio.play();
+                        });
+                } else {
+                    console.log("Aucune musique trouvée");
+                }
+            });
+        //on joue la prochaine musique valide
+        console.log("nextId", nextId);
+    }
+
+
+    function getPrevMusicByValidId(id) {
+        //on recupere le prochain id valide
+        fetch("controller/search_prev_id_controller.php?id=" + id)
+            .then(res => res.json())
+            .then(data => {
+                if (data.music_id) {
+                    prevId = data.music_id;
+                    let url = new URL(window.location.href);
+                    url.searchParams.set('id', prevId); //modifie les parametres de l'url
+                    window.history.pushState({}, '', url); //je modifie l'url sans recharger la page
+                    fetch("controller/view_music_controller.php?id=" + prevId)
+                        .then(res => res.json())
+                        .then(track => {
+                            // console.log(track);
+                            audio.src = "musiques/uploads/" + track.music_path;
+                            titleInput.value = typeof(track.music_track) !== "undefined" ? track.music_track : "";
+                            licenseInput.value = typeof(track.music_licence) !== "undefined" ? track.music_licence : "";
+                            sourceInput.value = typeof(track.music_source) !== "undefined" ? track.music_source : "";
+                            audio.play();
+                        });
+                } else {
+                    console.log("Aucune musique trouvée");
+                }
+            });
+        //on joue la musique precedente valide
+        // console.log("prevId", prevId);
+    }
+
+    next.addEventListener("click", function() {
+        parsedUrl = new URL(window.location.href);
+        id = parsedUrl.searchParams.get("id");
+        getNextMusicByValidId(id);
+    })
+
+    prev.addEventListener("click", function() {
+        parsedUrl = new URL(window.location.href);
+        id = parsedUrl.searchParams.get("id");
+        getPrevMusicByValidId(id);
+    })
 </script>

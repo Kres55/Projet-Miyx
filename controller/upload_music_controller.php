@@ -1,7 +1,6 @@
 <?php
-
-include "pdo.php";
 session_start();
+include "pdo.php";
 // echo 'upload_max_filesize = ' . ini_get('upload_max_filesize') . "<br>";
 // echo 'post_max_size = ' . ini_get('post_max_size') . "<br>";
 
@@ -21,70 +20,53 @@ if (
     !empty($_POST['music_licence'])
 ) {
 
-    // if (!isset($_FILES['music_path'])) {
-    //     echo " Aucun fichier reçu dans $_FILES.<br>";
-    // } else {
-    //     echo " Fichier trouvé dans $_FILES.<br>";
-
-    //     $tmpName = $_FILES['music_path']['tmp_name'];
-    //     $errorCode = $_FILES['music_path']['error'];
-
-    //     // Vérifie l'erreur d'upload
-    //     if ($errorCode !== UPLOAD_ERR_OK) {
-    //         echo " Erreur d'upload : Code $errorCode<br>";
-    //     } else {
-    //         echo " Upload sans erreur.<br>";
-    //     }
-
-    //     // Vérifie si le fichier temporaire existe
-    //     if (!is_uploaded_file($tmpName)) {
-    //         echo " Le fichier temporaire n'est pas reconnu comme un fichier uploadé valide.<br>";
-    //     } elseif (!file_exists($tmpName)) {
-    //         echo " Le fichier temporaire n'existe pas physiquement.<br>";
-    //     } else {
-    //         echo " Le fichier temporaire est présent et reconnu.<br>";
-    //     }
-
-    //     // Bonus : afficher la taille du fichier
-    //     echo "Taille du fichier uploadé : " . $_FILES['music_path']['size'] . " octets<br>";
-    // }
-
-
-
-
-    // $sqlGenre = "SELECT genre (genre_name) VALUES (?)";
-
-    // $stmt = $pdo->prepare($sqlGenre);
-    // $stmt->execute([
-    //     $_POST["genre_name"],
-    // ]);
-
 
     if (isset($_FILES['music_path'])) {
-        $filename = $_FILES['music_path']["name"]; // c'est le nom du fichier
-        $filesize = $_FILES['music_path']["size"]; // c'est sa taille en octets
+        $filename = $_FILES['music_path']["name"]; 
+        $filesize = $_FILES['music_path']["size"]; 
         // c'est le nom temporaire, ce qui correspond au fichier, cela permet de le manipuler pendant qu'il est charger.
         $tmpName = $_FILES['music_path']["tmp_name"];
 
-        // exemple spark.mp3 => ["spark", "mp3"]
-        $explodeName = explode(".", $filename);
-        // Il met tout en minuscule et prends le dernier element du tableau : mp3.
-        $extension = strtolower(end($explodeName));
+        $validExtensions = ['mp3', 'wav', 'flac', 'aiff'];
 
-        $validExtensions = ["wav", "flac", "aiff", "mp3"];
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        if (!in_array($extension, $validExtensions)) {
+            header("Location: ../view/upload_music.php?message=Extension non autorisée.&status=error");
+            exit;
+        }
+
+        // 2️⃣ TABLEAU DES MIME AUTORISÉS
+        $validMimes = [
+            'audio/mpeg',
+            'audio/wav',
+            'audio/x-wav',
+            'audio/flac',
+            'audio/aiff',
+            'audio/x-aiff'
+        ];
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $tmpName);
+        finfo_close($finfo);
+
+        if (!in_array($mime, $validMimes)) {
+            header("Location: ../view/upload_music.php?message=Type de fichier invalide.&status=error");
+            exit;
+        }
+
 
         // On verifie que l'extension est bien dans le tableau
         if (in_array($extension, $validExtensions)) {
-            // On verifie que le fichier fait moins de 70Mo
             if ($filesize < 73400320) {
-                // Il faut renommer pour eviter les doublons et concaténer avec l'extension.
+                // renomme pour eviter les doublons et concaténer avec l'extension.
                 $newName = sha1(uniqid(mt_rand(), true)) . "." . $extension;
 
                 try {
                     // On déplace le fichier temporaire vers le dossier de destination.
                     //var_dump("../musiques/uploads/" . $newName);
                     if (move_uploaded_file($tmpName, "../musiques/uploads/" . $newName)) {
-                        echo "Le fichier a été uploadé avec succès.";
+                        //echo "Le fichier a été uploadé avec succès.";
 
 
                         $id = $_SESSION['user_id'];
@@ -98,7 +80,8 @@ if (
                             $id
                         ]);
                     } else {
-                        echo "Le fichier n'a pas pu être uploadé.";
+                        //echo "Le fichier n'a pas pu être uploadé.";
+                        exit;
                     }
 
                     $idMusic = $pdo->lastInsertId();
@@ -108,9 +91,10 @@ if (
                         $idMusic,
                         $_POST["genre_name"]
                     ]);
+                    
                     header("Location: ../view/upload_music.php?message=Upload réussi&status=success");
                     exit;
-                    // je t'ai rajoué le message de succces.
+                    
 
                 } catch (Exception $e) {
                     $message = $e->getMessage();
