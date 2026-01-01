@@ -24,7 +24,7 @@ if (
     if (isset($_FILES['music_path'])) {
         $filename = $_FILES['music_path']["name"]; 
         $filesize = $_FILES['music_path']["size"]; 
-        // c'est le nom temporaire, ce qui correspond au fichier, cela permet de le manipuler pendant qu'il est charger.
+        // c'est le nom temporaire, ce qui correspond au fichier, cela permet de le manipuler pendant qu'il est chargé.
         $tmpName = $_FILES['music_path']["tmp_name"];
 
         $validExtensions = ['mp3', 'wav', 'flac', 'aiff'];
@@ -36,7 +36,7 @@ if (
             exit;
         }
 
-        // 2️⃣ TABLEAU DES MIME AUTORISÉS
+        // TABLEAU DES MIME AUTORISÉS
         $validMimes = [
             'audio/mpeg',
             'audio/wav',
